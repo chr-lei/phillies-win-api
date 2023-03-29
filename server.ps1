@@ -2,7 +2,6 @@ function Get-PhilliesResult {
     # Set parameters needed for the Statsapi query
     $endpoint = "https://statsapi.mlb.com/api/v1/schedule"
     $gamedate = Get-Date -Format "yyyy-MM-dd"
-
     $teamid = 143
     $sportid = 1
 
@@ -12,9 +11,11 @@ function Get-PhilliesResult {
     # Parse the JSON response from Statsapi and find a Phillies game if they played.
     $gamefound = $false
     foreach ($game in $response.dates.games) {
-            if ($game.teams.home.team.id -eq $teamid -or $game.teams.away.team.id -eq $teamid) {
-            $gamefound = $true
+        if ($game.teams.home.team.id -eq $teamid -or $game.teams.away.team.id -eq $teamid) {
             # We found a Phillies game. What happened?
+            $gamefound = $true
+            $gameresult = $null
+            
             if ($game.teams.home.isWinner) {
                 $winner = $game.teams.home.team.id
             }
@@ -26,26 +27,28 @@ function Get-PhilliesResult {
                 $gameresult = @{
                     outcome = 'W'
                     mood = 'Elated'
+                    date = $gamedate
                 }
             }
             else {
                 $gameresult = @{
                     outcome = 'L'
                     mood = 'Miserable'
+                    date = $gamedate
                 }
             }
             Write-PodeJsonResponse -Value (ConvertTo-Json -InputObject $gameresult)
-
         }
+    }
 
-        if (-not $gamefound) {
-            # We didn't find a Phillies game.
-            $gameresult = @{
-                outcome = 0
-                mood = 'Confused'
-            }
-            Write-PodeJsonResponse -Value (ConvertTo-Json -InputObject $gameresult)
+    if (-not $gamefound) {
+        # We didn't find a Phillies game.
+        $gameresult = @{
+            outcome = 0
+            mood = 'Confused'
+            date = $gamedate
         }
+        Write-PodeJsonResponse -Value (ConvertTo-Json -InputObject $gameresult)
     }
 
 }
