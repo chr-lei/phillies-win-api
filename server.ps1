@@ -52,7 +52,7 @@ function Get-PhilliesResult {
 
 Start-PodeServer {
     # Add a plain HTTP endpoint
-    Add-PodeEndpoint -Address localhost -Port 8080 -Protocol Http
+    Add-PodeEndpoint -Address * -Port 8080 -Protocol Http
 
     # Log to the terminal for debugging
     # New-PodeLoggingMethod -Terminal | Enable-PodeErrorLogging
