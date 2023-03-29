@@ -4,7 +4,8 @@ FROM badgerati/pode:latest
 # Install packages
 
 # copy over the local files to the container
-COPY . /usr/src/app/
+COPY server.ps1 /usr/src/app/
+COPY package.json /usr/src/app/
 
 # expose the port
 EXPOSE 8080
