@@ -40,9 +40,12 @@ function Get-PhilliesResult {
 
         if (-not $gamefound) {
             # We didn't find a Phillies game.
-            $nogamestring = "The Phillies didn't play today. Am I a joke to you?"
-            ConvertTo-Json -InputObject $nogamestring
-            Write-PodeJsonResponse -Value $nogamestring
+            $gameresult = @{
+                outcome = 0
+                mood = 'Confused'
+            }
+            ConvertTo-Json -InputObject $gameresult
+            Write-PodeJsonResponse -Value $gameresult
         }
     }
 
