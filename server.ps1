@@ -1,7 +1,10 @@
 function Get-PhilliesResult {
+    param (
+        [Parameter()][string]$gamedate = (Get-Date -Format "yyyy-MM-dd")
+    )
+
     # Set parameters needed for the Statsapi query
-    $endpoint = "https://statsapi.mlb.com/api/v1/schedule"
-    $gamedate = Get-Date -Format "yyyy-MM-dd"
+    $endpoint = "https://statsapi.mlb.com/api/v1/schedule" 
     $teamid = 143
     $sportid = 1
 
@@ -26,14 +29,14 @@ function Get-PhilliesResult {
             if ($winner -eq $teamid) {
                 $gameresult = @{
                     outcome = 'W'
-                    mood = 'Elated'
+                    text = 'The Phillies won!'
                     date = $gamedate
                 }
             }
             else {
                 $gameresult = @{
                     outcome = 'L'
-                    mood = 'Miserable'
+                    text = 'The Phillies lost. This is bullshit.'
                     date = $gamedate
                 }
             }
@@ -45,7 +48,7 @@ function Get-PhilliesResult {
         # We didn't find a Phillies game.
         $gameresult = @{
             outcome = 0
-            mood = 'Confused'
+            text = "The Phillies didn't play today. The hell goin' on?"
             date = $gamedate
         }
         Write-PodeJsonResponse -Value (ConvertTo-Json -InputObject $gameresult)
@@ -62,7 +65,13 @@ Start-PodeServer {
 
     # Add an route for /json that returns a JSON response
     Add-PodeRoute -Method Get -Path '/json' -ScriptBlock {
-        Get-PhilliesResult
+        if ($WebEvent.Query['Date'] -eq $null) {
+            Get-PhilliesResult
+        }
+        else {
+            Get-PhilliesResult -GameDate $WebEvent.Query['Date']
+        }
+        
     }
 
 }
