@@ -1,11 +1,10 @@
 # Add an route for /json that returns a JSON response
 Add-PodeRoute -Method Get -Path '/json' -ScriptBlock {
     if ($WebEvent.Query['Date'] -eq $null) {
-        Get-PhilliesResult
+        Get-Games -TeamId $WebEvent.Query['Team']
     }
     else {
-        Get-PhilliesResult -GameDate $WebEvent.Query['Date']
+        Get-Games -TeamId $WebEvent.Query['Team'] -GameDate $WebEvent.Query['Date']
     }
     
 }
-

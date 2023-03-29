@@ -6,5 +6,5 @@ Start-PodeServer {
     # New-PodeLoggingMethod -Terminal | Enable-PodeErrorLogging
 
     Use-PodeRoutes -Path ./routes
-    Import-PodeModule -Path ./modules/gameresults.psm1
+    Import-PodeModule -Path ./modules/gameresults/gameresults.psm1
 }
