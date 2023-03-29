@@ -1,3 +1,22 @@
+function Get-Games {
+    <#
+    .SYNOPSIS
+        Retrieves an array of game objects for a specified date,
+        in JSON format.
+
+    .PARAMETER GameDate
+        The calendar date (in string form) to query for game data
+    
+    .PARAMETER TeamId
+        Required. The numerical ID number of a team whose games
+        should be returned.
+
+    #>
+    param (
+        [Parameter()][string]$GameDate = (Get-Date -Format "yyyy-MM-dd"),
+        [Parameter(Mandatory)][Int32]$TeamId
+    )
+}
 function Get-PhilliesResult {
     param (
         [Parameter()][string]$gamedate = (Get-Date -Format "yyyy-MM-dd")
@@ -52,30 +71,6 @@ function Get-PhilliesResult {
             date = $gamedate
         }
         Write-PodeJsonResponse -Value (ConvertTo-Json -InputObject $gameresult)
-    }
-
-}
-
-Start-PodeServer {
-    # Add a plain HTTP endpoint
-    Add-PodeEndpoint -Address * -Port 8080 -Protocol Http
-
-    # Log to the terminal for debugging
-    # New-PodeLoggingMethod -Terminal | Enable-PodeErrorLogging
-
-    # Add an route for /json that returns a JSON response
-    Add-PodeRoute -Method Get -Path '/json' -ScriptBlock {
-        if ($WebEvent.Query['Date'] -eq $null) {
-            Get-PhilliesResult
-        }
-        else {
-            Get-PhilliesResult -GameDate $WebEvent.Query['Date']
-        }
-        
-    }
-
-    Add-PodeRoute -Method Get -Path '/test' -ScriptBlock {
-        Write-PodeTextResponse -Value "Pode is awake."
     }
 
 }
