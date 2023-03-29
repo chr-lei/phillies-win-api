@@ -7,6 +7,8 @@ on:
     paths:
     - 'src/**'
     - '.github/workflows/aca-deploy.yaml'
+  # Allow mannually trigger 
+  workflow_dispatch:
 
 jobs:
   build:
