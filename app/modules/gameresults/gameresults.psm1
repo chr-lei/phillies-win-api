@@ -15,7 +15,7 @@ function Get-Games {
     #>
     param (
         [Parameter()][string]$GameDate = (Get-Date -Format "yyyy-MM-dd"),
-        [Parameter(Mandatory)][Int32]$TeamId
+        [Parameter(Mandatory)][string]$TeamId
     )
 
     # Specify the MLB Stats API endpoitn
@@ -24,13 +24,13 @@ function Get-Games {
     $sportid = 1
 
     # Craft a URI based on input data
-    $uri = "$statsendpoint`?sportId=$sportid&teamId=$teamid&date=$date"
+    $uri = "$statsendpoint`?sportId=$sportid&teamId=$teamid&date=$gamedate"
 
     # Query the API for games matching the date and team
     $statsresponse = Invoke-RestMethod -Uri $uri -Method Get
     
     # Define an array of JSON objects that we'll ultimately return
-    $resultobjects = @{}
+    $results = @()
 
     # Init a counter to tag each game with a sequential number
     $gamecounter = 0
@@ -46,7 +46,7 @@ function Get-Games {
         elseif ($game.teams.home.isWinner) {
             $winnerid = $game.teams.home.team.id
             $winnername = $game.teams.home.team.name
-            $losername = $game.teams.away.team.nam
+            $losername = $game.teams.away.team.name
         }
         # If it's not a tie and not a home team win, away won.
         else {
@@ -57,24 +57,24 @@ function Get-Games {
 
         # Now build a result object
         # First check for a tie
-        if ($winnerid = 0) {
+        if ($winnerid -eq 0) {
             $resultobj = @{
                 Outcome = "Tie"
                 Date = $GameDate
                 GameNumber = $gamecounter
                 TextResult = "The game between $($game.teams.away.team.name) and $($game.teams.home.team.name) ended in a tie."
             }
-            $resultobjects += $resultobj
+            $results += $resultobj
         }
         # If the specified team won
-        elseif ($winnerid -eq $TeamId) {
+        elseif ($winnerid -eq $teamid) {
             $resultobj = @{
                 Outcome = "Win"
                 Date = $GameDate
                 GameNumber = $gamecounter
                 TextResult = "The $($winnername) beat the $($losername)! Grease the damn light poles!"
             }
-            $resultobjects += $resultobj
+            $results += $resultobj
         }
 
         # If the bad guys won
@@ -83,11 +83,12 @@ function Get-Games {
                 Outcome = "Loss"
                 Date = $GameDate
                 GameNumber = $gamecounter
-                TextResult = "Damnit, $($winnername) won."
+                TextResult = "Damnit, the $($winnername) won."
             }
-            $resultobjects += $resultobj
+            $results += $resultobj
         }
+        
     }
 
-    return $resultobjects
+    return ($results | ConvertTo-Json)
 }
