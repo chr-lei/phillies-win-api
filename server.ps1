@@ -44,8 +44,7 @@ function Get-PhilliesResult {
                 outcome = 0
                 mood = 'Confused'
             }
-            ConvertTo-Json -InputObject $gameresult
-            Write-PodeJsonResponse -Value $gameresult
+            Write-PodeJsonResponse -Value (ConvertTo-Json -InputObject $gameresult)
         }
     }
 
