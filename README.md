@@ -7,7 +7,7 @@ The main goal for this project was to get practice with building containers and 
 
 Also - no attempt was made to handle weird baseball things like doubleheaders, suspended games, etc. No idea how it'll react to those, but the intent wasn't to reimplement the entire Stats API here.
 
-Basically, I know the backend logic incomlete andrough and it'll break if you try to break it.
+TL;DR: I know the backend logic is incomplete and rough and not "good code," and it'll break if you try to break it.
 
 ## Public Endpoint
 The public endpoint for the API is currently currently [https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json](https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json).
