@@ -7,4 +7,5 @@ Start-PodeServer {
 
     Use-PodeRoutes -Path ./routes
     Import-PodeModule -Path ./modules/gameresults/gameresults.psm1
+    Import-PodeModule -Path ./modules/textresponses/textresponses.psm1
 }
