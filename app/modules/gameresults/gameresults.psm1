@@ -1,8 +1,73 @@
+class GameResult {
+    [String]$Status
+    [Int]$WinnerId
+    [String]$WinnerName
+    [Int]$WinnerScore
+    [String]$LoserName
+    [Int]$LoserScore
+    [String]$StartDateTime
+}
+
+function New-GameResult {
+    <#
+    .SYNOPSIS
+        Takes game data from the stats API for a particular game
+        and reports on the winner and scores.
+    
+    .PARAMETER GameData
+        Game data in JSON format from the Stats API
+    #>
+
+    param(
+        [Parameter(Mandatory)][PSCustomObject]$GameData
+    )
+
+    # Instantiate a GameResult object to hold our findings
+    $GameResultObject = [GameResult]::new()
+
+    $GameResultObject.StartDateTime = ($GameData.gameDate)
+
+    # Check to see if the game is a Tie
+    if ($GameData.isTie) {
+        $GameResultObject.Result = 'T'
+    }
+    
+    # Check to see if the game is final
+    $IsFinal = ($GameData.status.codedGameState -eq 'F')
+
+    # If the game is final, then look for a winner.
+    if ($IsFinal) {
+        # Set the game status to (F)inal
+        $GameResultObject.Status = 'F'
+        # Check if the home team was the winner
+        if ($GameData.teams.home.isWinner) {
+            # If the home team won, update the GameResult object
+            $GameResultObject.WinnerId = $GameData.teams.home.team.id
+            $GameResultObject.WinnerName = $GameData.teams.home.team.name
+            $GameResultObject.WinnerScore = $GameData.teams.home.score
+            $GameResultObject.LoserName = $GameData.teams.away.team.name
+            $GameResultObject.LoserScore = $GameData.teams.away.score
+        }
+        
+        # Otherwise, the away team won, so update the object accordingly
+        else {
+            $GameResultObject.WinnerId = $GameData.teams.away.team.id
+            $GameResultObject.WinnerName = $GameData.teams.away.team.name
+            $GameResultObject.WinnerScore = $GameData.teams.away.score
+            $GameResultObject.LoserName = $GameData.teams.home.team.name
+            $GameResultObject.LoserScore = $GameData.teams.home.score
+        }
+    }
+    # Otherwise, update the status to Incomplete; and there's no winners.
+    else { $GameResultObject.Status = 'I' }
+
+    return ($GameResultObject)
+}
+
 function Get-Games {
     <#
     .SYNOPSIS
-        Retrieves an array of game objects for a specified date,
-        in JSON format.
+        Retrieves an object with game results for the selected date.
 
     .PARAMETER GameDate
         The calendar date (in string form) to query for game data.
@@ -12,19 +77,26 @@ function Get-Games {
         Required. The numerical ID number of a team whose games
         should be returned.
 
+    .PARAMETER Selector
+        Text string used to indicate if the response should include
+        all of the team's games on a date (e.g., both games of a doubleheader),
+        or only return data from the latest completed game.
+
     #>
     param (
-        [Parameter()][string]$GameDate = (Get-Date -Format "yyyy-MM-dd"),
-        [Parameter(Mandatory)][string]$TeamId
+        [Parameter()][string]$GameDate = (Get-Date -Format 'yyyy-MM-dd'),
+        [Parameter(Mandatory)][string]$TeamId,
+        [ValidateSet('latest','all')]
+        [Parameter()][string]$Selector = 'latest'
     )
 
-    # Specify the MLB Stats API endpoitn
+    # Specify the MLB Stats API endpoint
     $statsendpoint = "https://statsapi.mlb.com/api/v1/schedule"
     # SportID will always be 1, for MLB
     $sportid = 1
 
     # Craft a URI based on input data
-    $uri = "$statsendpoint`?sportId=$sportid&teamId=$teamid&date=$gamedate"
+    $uri = "$statsendpoint`?sportId=$sportid&teamId=$teamid&date=$GameDate"
 
     # Query the API for games matching the date and team
     $statsresponse = Invoke-RestMethod -Uri $uri -Method Get
@@ -33,62 +105,20 @@ function Get-Games {
     $results = @()
 
     # Init a counter to tag each game with a sequential number
-    $gamecounter = 0
+    $GameCounter = 0
 
-    foreach ($game in $statsresponse.dates.games) {
-        $gamecounter++
-
-        # Check for ties (Spring Training) first
-        if ($game.isTie -eq $True) {
-            $winnerid = 0
-        }
-        # Check if the home team was a winner
-        elseif ($game.teams.home.isWinner) {
-            $winnerid = $game.teams.home.team.id
-            $winnername = $game.teams.home.team.name
-            $losername = $game.teams.away.team.name
-        }
-        # If it's not a tie and not a home team win, away won.
-        else {
-            $winnerid = $game.teams.away.team.id
-            $winnername = $game.teams.away.team.name
-            $losername = $game.teams.home.team.name
-        }
-
-        # Now build a result object
-        # First check for a tie
-        if ($winnerid -eq 0) {
-            $resultobj = @{
-                Outcome = "Tie"
-                Date = $GameDate
-                GameNumber = $gamecounter
-                TextResult = "The game between $($game.teams.away.team.name) and $($game.teams.home.team.name) ended in a tie."
-            }
-            $results += $resultobj
-        }
-        # If the specified team won
-        elseif ($winnerid -eq $teamid) {
-            $resultobj = @{
-                Outcome = "Win"
-                Date = $GameDate
-                GameNumber = $gamecounter
-                TextResult = "The $($winnername) beat the $($losername)! Grease the damn light poles!"
-            }
-            $results += $resultobj
-        }
-
-        # If the bad guys won
-        elseif ($winnerid -ne $TeamId) {
-            $resultobj = @{
-                Outcome = "Loss"
-                Date = $GameDate
-                GameNumber = $gamecounter
-                TextResult = "Damnit, the $($winnername) won."
-            }
-            $results += $resultobj
-        }
-        
+    # If there is only one game scheduled, analyze that game and include
+    # it in the results object
+    if ($statsresponse.totalGames -eq 1) {
+        $GameCounter++
+        $results += New-GameResult $statsresponse.dates.games
     }
 
-    return ($results | ConvertTo-Json)
+    # TODO - Implement logic for multiple games
+
+    $ResultsObject = @{
+        NumberOfGames = $GameCounter
+        GameResults = $results
+    }
+    return ($ResultsObject)
 }
