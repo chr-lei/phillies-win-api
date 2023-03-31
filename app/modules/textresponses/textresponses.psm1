@@ -17,7 +17,7 @@ function New-WinnerTextResponse {
 
     # If the game isn't in Final status and starts in the future, decline to answer.
     if ($ResultData.Status -ne 'F' -and $ResultData.StartDateTime -gt (Get-Date)) {
-        $MainString = "They didn't even play yet. I'm not Gray's Sports Alamanac."
+        $MainString = "They didn't even play yet. I'm not Gray's Sports Almanac."
         $SarcasmString = "Go butter your cup and then ask me again."
         if ($Sarcasm) {
             return ($MainString + " " + $SarcasmString)
@@ -27,8 +27,8 @@ function New-WinnerTextResponse {
  
     # If the selected team didn't win
     if ($ResultData.WinnerID -ne $TeamId) {
-        $MainString = "The $($ResultData.LoserName) lost to $($ResultData.WinnerName), $($ResultData.WinnerScore) - $($ResultData.LoserScore)."
-        $SarcasmString = "Fuckin' Angel Hernandez, man."
+        $MainString = "The $($ResultData.LoserName) lost to the $($ResultData.WinnerName), $($ResultData.WinnerScore) - $($ResultData.LoserScore)."
+        $SarcasmString = "Angel Hernandez did this, man."
         if ($Sarcasm) {
             return ($MainString + " " + $SarcasmString)
         }
