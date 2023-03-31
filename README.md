@@ -12,10 +12,10 @@ Also - minimal attempt was made to handle weird baseball things like doubleheade
 TL;DR: I know the backend logic is incomplete and rough and not "good code," and it'll break if you try to break it.
 
 ## API Usage
-The API is very simple right now - you can call the [endpoint](https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json) with a TeamID parameter to check the schedule for today's games for that team. For example, to see if the Phillies won today, you could use [https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json?team=143](https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json?team=143).
+The API is very simple right now - you can call the endpoint with a TeamID parameter to check the schedule for today's games for that team. For example, to see if the Phillies won today, you could use [https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json?team=143](https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/api/json?team=143).
 
 Alternatively, you can also specify a date in yyyy-MM-dd format to check the outcome of the game on a particular date. For example, to check to see if the Phillies won on July 22, 2022, you could call:
-[https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json?date=2022-07-22&team=143](https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json?date=2022-07-22&team=143).
+[https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/json?date=2022-07-22&team=143](https://phillies-prod.thankfulbush-cea20cfa.eastus2.azurecontainerapps.io/api/json?date=2022-07-22&team=143).
 
 ## To-Do's
 Next steps for this learning exercise are to:
