@@ -17,8 +17,8 @@ function New-WinnerTextResponse {
 
     # If the game isn't in Final status and starts in the future, decline to answer.
     if ($ResultData.Status -ne 'F' -and $ResultData.StartDateTime -gt (Get-Date)) {
-        $MainString = "They didn't even play yet. I'm not Gray's Sports Almanac."
-        $SarcasmString = "Go butter your cup and then ask me again."
+        $MainString = "The game isn't over yet."
+        $SarcasmString = "I'm not Gray's Sports Alamanc, you know."
         if ($Sarcasm) {
             return ($MainString + " " + $SarcasmString)
         }
