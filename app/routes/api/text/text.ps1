@@ -19,7 +19,7 @@ Add-PodeRoute -Method Get -Path '/api/text' -ScriptBlock {
         $OriginalDate = (($WebEvent.Query['Date']) | Get-Date)
         $NewDate = ($OriginalDate.Subtract($OneDayTimespan)).ToString('yyyy-MM-dd')
 
-        $Results = Get-Game -TeamId $WebEvent.Query['Team'] `
+        $Results = Get-Games -TeamId $WebEvent.Query['Team'] `
         -GameDate $NewDate `
         -Selector $Selector
     }
