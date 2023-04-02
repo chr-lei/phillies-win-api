@@ -38,7 +38,7 @@ function New-WinnerTextResponse {
     # If the selected team didn't win
     if ($ResultData.WinnerID -ne $TeamId) {
         $GameDate = ($ResultData.StartDateTime | Get-Date)
-        $MainString = "On $($GameDate.ToString('mm/dd/yyyy')), the $($ResultData.LoserName) lost to the $($ResultData.WinnerName), $($ResultData.WinnerScore) - $($ResultData.LoserScore)."
+        $MainString = "On $($GameDate.ToString('MM/dd/yyyy')), the $($ResultData.LoserName) lost to the $($ResultData.WinnerName), $($ResultData.WinnerScore) - $($ResultData.LoserScore)."
         $SarcasmString = "Angel Hernandez did this, man."
         if ($Sarcasm) {
             return ($MainString + " " + $SarcasmString)
@@ -48,7 +48,8 @@ function New-WinnerTextResponse {
 
     # If the selected team did win
     if ($ResultData.WinnerID -eq $TeamId) {
-        $MainString = "The $($ResultData.WinnerName) won! They beat the $($ResultData.LoserName), $($ResultData.WinnerScore) - $($ResultData.LoserScore)."
+        $GameDate = ($ResultData.StartDateTime | Get-Date)
+        $MainString = "On $($GameDate.ToString('MM/dd/yyyy')), the $($ResultData.WinnerName) won! They beat the $($ResultData.LoserName), $($ResultData.WinnerScore) - $($ResultData.LoserScore)."
         $SarcasmString = "Which, of course they did. Why are you even asking? Get a job."
         if ($Sarcasm) {
             return ($MainString + " " + $SarcasmString)
