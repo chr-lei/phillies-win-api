@@ -14,7 +14,7 @@ Add-PodeRoute -Method Get -Path '/api/text' -ScriptBlock {
         -Selector $Selector
 
     # If there isn't a final game on the given date, look back one day and retry
-    if ($null -ne $Results.GameResults.Status) {
+    if ($null -ne $Results.GameResults.WinnerID) {
         $OneDayTimespan = New-TimeSpan -Days 1
         $OriginalDate = (($WebEvent.Query['Date']) | Get-Date)
         $NewDate = ($OriginalDate.Subtract($OneDayTimespan)).ToString('yyyy-MM-dd')

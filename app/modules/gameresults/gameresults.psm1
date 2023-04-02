@@ -28,9 +28,10 @@ function New-GameResult {
     $GameResultObject.StartDateTime = ($GameData.gameDate)
 
     # Check to see if the game is a Tie
-    if ($GameData.isTie) {
-        $GameResultObject.Result = 'T'
-    }
+    # Only needed during Spring Training - come back to this later
+    #if ($GameData.isTie) {
+    #    $GameResultObject.Result = 'T'
+    #}
     
     # Check to see if the game is final
     $IsFinal = ($GameData.status.codedGameState -eq 'F')
