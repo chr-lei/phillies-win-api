@@ -6,6 +6,7 @@ class GameResult {
     [String]$LoserName
     [Int]$LoserScore
     [String]$StartDateTime
+    [String]$OfficialDate
 }
 
 function New-GameResult {
