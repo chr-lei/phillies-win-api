@@ -24,7 +24,7 @@ function New-WinnerTextResponse {
         }
         else { return $MainString }
     }
-
+    # If we are after the start time but not final, we've hit an in-progress game.
     if ($ResultData.Status -ne 'F' -and $ResultData.StartDateTime -lt (Get-Date)) {
         $MainString = "The game isn't over yet."
         $SarcasmString = "And there's some lint in my third eye. You'll have to check again later."
@@ -33,10 +33,12 @@ function New-WinnerTextResponse {
         }
         else { return $MainString }
     }
- 
+    
+    # Final games:
     # If the selected team didn't win
     if ($ResultData.WinnerID -ne $TeamId) {
-        $MainString = "The $($ResultData.LoserName) lost to the $($ResultData.WinnerName), $($ResultData.WinnerScore) - $($ResultData.LoserScore)."
+        $GameDate = ($ResultData.StartDateTime | Get-Date)
+        $MainString = "On $($GameDate.ToString('mm/dd/yyyy')), the $($ResultData.LoserName) lost to the $($ResultData.WinnerName), $($ResultData.WinnerScore) - $($ResultData.LoserScore)."
         $SarcasmString = "Angel Hernandez did this, man."
         if ($Sarcasm) {
             return ($MainString + " " + $SarcasmString)
