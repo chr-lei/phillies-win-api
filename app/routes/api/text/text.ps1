@@ -13,12 +13,12 @@ Add-PodeRoute -Method Get -Path '/api/text' -ScriptBlock {
         -GameDate $WebEvent.Query['Date'] `
         -Selector $Selector
 
-    # If there wasn't a game on the given date, look back one day and retry
-    if ($null -eq $Results.GameResults.Status) {
+    # If there isn't a final game on the given date, look back one day and retry
+    if ($null -ne $Results.GameResults.Status) {
         $OneDayTimespan = New-TimeSpan -Days 1
         $OriginalDate = (($WebEvent.Query['Date']) | Get-Date)
         $NewDate = ($OriginalDate.Subtract($OneDayTimespan)).ToString('yyyy-MM-dd')
-        
+
         $Results = Get-Game -TeamId $WebEvent.Query['Team'] `
         -GameDate $NewDate `
         -Selector $Selector
