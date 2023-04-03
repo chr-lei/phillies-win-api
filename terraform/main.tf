@@ -28,7 +28,7 @@ variable "github_repository" {
   type = string
 }
 
-variable "enviorment" {
+variable "environment" {
   type = string
 }
 
