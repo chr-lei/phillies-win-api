@@ -38,7 +38,7 @@ resource "random_pet" "org" {
 
 locals {
   org              = var.org == null ? random_pet.org[0].id : var.org
-  resource_postfix = "${local.org}-${var.enviorment}"
+  resource_postfix = "${local.org}-${var.environment}"
 }
 
 resource "azurerm_resource_group" "this" {

@@ -52,7 +52,7 @@ jobs:
           contents: |
             org = ${{ github.actor }}
             github_repository = ${{ github.repository	}}
-            enviorment = ${{ github.ref_name }}
+            environment = ${{ github.ref_name }}
 
       - name: Terraform Plan
         id: plan
