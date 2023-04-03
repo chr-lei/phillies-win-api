@@ -60,8 +60,9 @@ function New-GameResult {
             $GameResultObject.LoserScore = $GameData.teams.home.score
         }
     }
-    # Otherwise, update the status to Incomplete; and there's no winners.
-    else { $GameResultObject.Status = 'I' }
+    
+    # Otherwise, update the status to Pre-game; and there's no winners.
+    else { $GameResultObject.Status = $GameData.status.codedGameState }
 
     return ($GameResultObject)
 }
