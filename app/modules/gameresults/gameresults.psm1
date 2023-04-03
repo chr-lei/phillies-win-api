@@ -6,6 +6,7 @@ class GameResult {
     [String]$LoserName
     [Int]$LoserScore
     [String]$StartDateTime
+    [String]$OfficialDate
 }
 
 function New-GameResult {
@@ -28,9 +29,10 @@ function New-GameResult {
     $GameResultObject.StartDateTime = ($GameData.gameDate)
 
     # Check to see if the game is a Tie
-    if ($GameData.isTie) {
-        $GameResultObject.Result = 'T'
-    }
+    # Only needed during Spring Training - come back to this later
+    #if ($GameData.isTie) {
+    #    $GameResultObject.Result = 'T'
+    #}
     
     # Check to see if the game is final
     $IsFinal = ($GameData.status.codedGameState -eq 'F')
@@ -58,8 +60,9 @@ function New-GameResult {
             $GameResultObject.LoserScore = $GameData.teams.home.score
         }
     }
-    # Otherwise, update the status to Incomplete; and there's no winners.
-    else { $GameResultObject.Status = 'I' }
+    
+    # Otherwise, update the status to Pre-game; and there's no winners.
+    else { $GameResultObject.Status = $GameData.status.codedGameState }
 
     return ($GameResultObject)
 }
