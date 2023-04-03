@@ -1,11 +1,11 @@
 terraform {
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
       version = "3.50.0"
     }
     github = {
-      source = "integrations/github"
+      source  = "integrations/github"
       version = "5.18.3"
     }
   }
@@ -20,7 +20,7 @@ provider "github" {
 }
 
 variable "org" {
-  type = string
+  type    = string
   default = null
 }
 
@@ -33,11 +33,11 @@ variable "enviorment" {
 }
 
 resource "random_pet" "org" {
-  count = var.org == null? 1: 0
+  count = var.org == null ? 1 : 0
 }
 
 locals {
-  org = var.org == null? random_pet.org.id : var.org
+  org              = var.org == null ? random_pet.org.id : var.org
   resource_postfix = "${local.org}-${var.enviorment}"
 }
 
@@ -69,29 +69,29 @@ resource "azurerm_container_app_environment" "example" {
 }
 
 data "github_repository" "this" {
-  full_name = "${var.github_repository}"
+  full_name = var.github_repository
 }
 
 resource "github_repository_environment" "this" {
-  environment  = "${var.environment}"
-  repository   = data.github_repository.this.name
+  environment = var.environment
+  repository  = data.github_repository.this.name
   deployment_branch_policy {
-    protected_branches          = true
+    protected_branches     = true
     custom_branch_policies = false
   }
 }
 
 locals {
   variables = {
-    RG_NAME = azurerm_resource_group.this.name
+    RG_NAME  = azurerm_resource_group.this.name
     ACR_NAME = azurerm_container_registry.acr.name
     ACA_NAME = "aca-${resource_postfix}"
   }
 }
 
 resource "github_actions_environment_variable" "this" {
-  for_each = local.variables
-  environment       = github_repository_environment.this.name
-  variable_name    = "${upper(each.key)}"
-  value            = "${each.value}"
+  for_each      = local.variables
+  environment   = github_repository_environment.this.name
+  variable_name = upper(each.key)
+  value         = each.value
 }
