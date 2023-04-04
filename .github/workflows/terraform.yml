@@ -35,9 +35,26 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
+      - name: Make safe env id
+        id: env
+        run: echo "${${{ github.repository}}.${{ github.ref_name }}//- /X}" >> $GITHUB_OUTPUT
+
+      # https://github.com/marketplace/actions/write-file
+      # https://developer.hashicorp.com/terraform/language/settings/backends/configuration
+      - name: Pass Backend
+        uses: DamianReeves/write-file-action@master
+        with:
+          path: ${{ github.workspace }}/${{ env.working-directory }}/azure.tfbackend
+          write-mode: overwrite
+          contents: |
+            resource_group_name  = "tfstate"
+            storage_account_name = "${{ vars.AZ_TFSTATE_SA }}"
+            container_name       = "tfstate"
+            key                  = "${{ join(steps.env.outputs.*, '') }}.tfstate"
+
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform init -backend-config=azure.tfbackend
 
       - name: Terraform Validate
         id: validate
