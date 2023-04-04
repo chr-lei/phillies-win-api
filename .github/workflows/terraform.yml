@@ -40,7 +40,7 @@ jobs:
         run: |
           string="${${{ github.repository}}.${{ github.ref_name }}//-\//.}"
           echo $string
-          echo $string >> $GITHUB_OUTPUT
+          echo "env=$string" >> $GITHUB_OUTPUT
 
       # https://github.com/marketplace/actions/write-file
       # https://developer.hashicorp.com/terraform/language/settings/backends/configuration
@@ -53,7 +53,7 @@ jobs:
             resource_group_name  = "tfstate"
             storage_account_name = "${{ vars.AZ_TFSTATE_SA }}"
             container_name       = "tfstate"
-            key                  = "${{ steps.env.outputs.0 }}.tfstate"
+            key                  = "${{ steps.env.outputs.env }}.tfstate"
 
       - name: Terraform Init
         id: init
