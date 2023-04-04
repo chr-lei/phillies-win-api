@@ -84,7 +84,7 @@ resource "github_repository_environment" "this" {
 locals {
   variables = {
     RG_NAME  = azurerm_resource_group.this.name
-    ACR_NAME = azurerm_container_registry.acr.name
+    ACR_NAME = azurerm_container_registry.this.name
     ACA_NAME = "aca-${resource_postfix}"
   }
 }
