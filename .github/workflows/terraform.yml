@@ -53,6 +53,9 @@ jobs:
             org = ${{ github.actor }}
             github_repository = ${{ github.repository	}}
             environment = ${{ github.ref_name }}
+      
+      - name: Check Files
+        run: ls -lsa
 
       - name: Terraform Plan
         id: plan
