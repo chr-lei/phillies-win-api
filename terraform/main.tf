@@ -52,7 +52,7 @@ resource "azurerm_resource_group" "this" {
 }
 
 resource "azurerm_container_registry" "this" {
-  name                = "acr-${local.resource_postfix}"
+  name                = replace("acr-${local.resource_postfix}", "-", "")
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   sku                 = "Standard"
