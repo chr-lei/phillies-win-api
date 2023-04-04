@@ -6,13 +6,16 @@ on:
       - main
   pull_request:
 
+env:
+  working-directory: terraform
+
 jobs:
   terraform:
     name: "Terraform"
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: terraform
+        working-directory: ${{ env.working-directory }}
     permissions:
       id-token: write
       contents: write
@@ -47,7 +50,7 @@ jobs:
       - name: Pass Varibales
         uses: DamianReeves/write-file-action@master
         with:
-          path: cicd.auto.tfvars
+          path: ${{ github.workspace }}/${{ env.working-directory }}/cicd.auto.tfvars
           write-mode: overwrite
           contents: |
             org = ${{ github.actor }}
