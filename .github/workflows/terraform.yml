@@ -53,9 +53,9 @@ jobs:
           path: ${{ github.workspace }}/${{ env.working-directory }}/cicd.auto.tfvars
           write-mode: overwrite
           contents: |
-            org = ${{ github.actor }}
-            github_repository = ${{ github.repository	}}
-            environment = ${{ github.ref_name }}
+            org = "${{ github.actor }}"
+            github_repository = "${{ github.repository	}}"
+            environment = "${{ github.ref_name }}"
       
       - name: Check Files
         run: ls -lsa
