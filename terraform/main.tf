@@ -92,6 +92,7 @@ locals {
 resource "github_actions_environment_variable" "this" {
   for_each      = local.variables
   environment   = github_repository_environment.this.environment
+  repository    = github_repository_environment.this.repository
   variable_name = upper(each.key)
   value         = each.value
 }
