@@ -85,7 +85,7 @@ locals {
   variables = {
     RG_NAME  = azurerm_resource_group.this.name
     ACR_NAME = azurerm_container_registry.this.name
-    ACA_NAME = "aca-${resource_postfix}"
+    ACA_NAME = "aca-${local.resource_postfix}"
   }
 }
 
