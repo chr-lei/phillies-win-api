@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "azurerm" {
-  # Configuration options
+  features {}
 }
 
 provider "github" {
