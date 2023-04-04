@@ -42,7 +42,7 @@ resource "random_pet" "org" {
 
 locals {
   org              = "${var.org}" == null ? random_pet.org[0].id : "${var.org}"
-  resource_postfix = "${local.org}-${var.environment}"
+  resource_postfix = "${local.org}-${replace(var.environment)}"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -77,7 +77,7 @@ data "github_repository" "this" {
 }
 
 resource "github_repository_environment" "this" {
-  environment = var.environment
+  environment = "${replace(var.environment, "/", "-")}"
   repository  = data.github_repository.this.name
   deployment_branch_policy {
     protected_branches     = true
