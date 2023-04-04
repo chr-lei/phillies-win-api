@@ -32,6 +32,10 @@ variable "environment" {
   type = string
 }
 
+variable "location" {
+  type = string
+}
+
 resource "random_pet" "org" {
   count = "${var.org}" == null ? 1 : 0
 }
@@ -43,7 +47,7 @@ locals {
 
 resource "azurerm_resource_group" "this" {
   name     = "rg-${local.resource_postfix}"
-  location = "US East"
+  location = var.location
 }
 
 resource "azurerm_container_registry" "this" {
