@@ -41,7 +41,7 @@ resource "random_pet" "org" {
 }
 
 locals {
-  safe_env = replace(var.environment, "/", "-")
+  safe_env         = replace(var.environment, "/", "-")
   org              = "${var.org}" == null ? random_pet.org[0].id : "${var.org}"
   resource_postfix = "${local.org}-${local.safe_env}"
 }
@@ -78,7 +78,7 @@ data "github_repository" "this" {
 }
 
 resource "github_repository_environment" "this" {
-  environment = "${local.safe_env}"
+  environment = local.safe_env
   repository  = data.github_repository.this.name
   deployment_branch_policy {
     protected_branches     = true
