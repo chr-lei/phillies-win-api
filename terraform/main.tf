@@ -77,7 +77,7 @@ data "github_repository" "this" {
 }
 
 resource "github_repository_environment" "this" {
-  environment = "${replace(var.environment, "/", "-")}"
+  environment = replace(var.environment, "/", "-")
   repository  = data.github_repository.this.name
   deployment_branch_policy {
     protected_branches     = true
