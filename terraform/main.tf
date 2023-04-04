@@ -37,7 +37,7 @@ resource "random_pet" "org" {
 }
 
 locals {
-  org              = "${var.org}" == null ? random_pet.org[0].id : "${var.org}" 
+  org              = "${var.org}" == null ? random_pet.org[0].id : "${var.org}"
   resource_postfix = "${local.org}-${var.environment}"
 }
 
@@ -73,7 +73,7 @@ data "github_repository" "this" {
 }
 
 resource "github_repository_environment" "this" {
-  environment = "${var.environment}"
+  environment = var.environment
   repository  = data.github_repository.this.name
   deployment_branch_policy {
     protected_branches     = true
@@ -93,6 +93,6 @@ resource "github_actions_environment_variable" "this" {
   for_each      = local.variables
   environment   = github_repository_environment.this.environment
   repository    = github_repository_environment.this.repository
-  variable_name = "${upper(each.key)}"
-  value         = "${each.value}"
+  variable_name = upper(each.key)
+  value         = each.value
 }
