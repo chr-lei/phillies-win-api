@@ -97,12 +97,12 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
 
       # https://github.com/marketplace/actions/github-tag-bump
       - name: Bump version and push tag
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: anothrNick/github-tag-action@1.61.0 # Don't use @master unless you're happy to test the latest version
         id: version
         env:
