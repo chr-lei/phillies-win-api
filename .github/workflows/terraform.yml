@@ -8,6 +8,10 @@ on:
 
 env:
   working-directory: terraform
+  ARM_CLIENT_ID: ${{ secret.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secret.ARM_CLIENT_SECRET }}
+  ARM_TENANT_ID: ${{ secret.ARM_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secret.ARM_SUBSCRIPTION_ID }}
 
 jobs:
   terraform:
@@ -20,11 +24,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      # https://github.com/marketplace/actions/azure-login
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
