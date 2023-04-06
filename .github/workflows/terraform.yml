@@ -34,9 +34,21 @@ jobs:
         with:
           terraform_version: latest
 
-      - name: Check if Terraform is Formatted Correctly (If it fails run ferraform fmt and commit)
+      - name: Check if Terraform is Formatted Correctly
         id: fmt
         run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Correcting Terraform Format for you.
+        if: steps.fmt.outcome == 'failure'
+        run: terraform fmt
+      
+      # https://github.com/marketplace/actions/add-commit
+      - name: Add and Commit Format Fixes
+        if: steps.fmt.outcome == 'failure'
+        uses: EndBug/add-and-commit@v9.1.1
+        with:
+          message: "[skip ci]: Github Actions fix Terraform Formating"
 
       - name: Make safe env id
         id: env
