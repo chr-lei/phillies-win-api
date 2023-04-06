@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    paths:
+    - 'terraform/**'
+    - '.github/workflows/terraform.yaml'
   pull_request:
 
 env:
