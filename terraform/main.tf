@@ -84,7 +84,7 @@ resource "github_repository_environment" "this" {
   deployment_branch_policy {
     custom_branch_policies = true
   }
-  
+
 }
 
 locals {
