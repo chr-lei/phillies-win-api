@@ -6,7 +6,7 @@ on:
       [ master ]
     paths:
     - 'app/**'
-    - '.github/workflows/aca-deploy.yaml'
+    - '.github/workflows/aca-deploy.yml'
   # Allow mannually trigger 
   workflow_dispatch:
 
