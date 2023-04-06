@@ -40,12 +40,12 @@ jobs:
         continue-on-error: true
 
       - name: Correcting Terraform Format for you.
-        if: steps.fmt.outcome == 'failure'
+        if: steps.fmt.outcome == 'failure' && github.event_name == 'pull_request'
         run: terraform fmt
       
       # https://github.com/marketplace/actions/add-commit
       - name: Add and Commit Format Fixes
-        if: steps.fmt.outcome == 'failure'
+        if: steps.fmt.outcome == 'failure' && github.event_name == 'pull_request'
         uses: EndBug/add-and-commit@v9.1.1
         with:
           message: "[skip ci]: Github Actions fix Terraform Formating"
