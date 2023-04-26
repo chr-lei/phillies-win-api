@@ -2,7 +2,7 @@
 
 This is a very basic, proof on concept API that will query Major League Baseball's Stats API to see if a Major League Baseball team won today or on a specified date, and return a result in JSON format.
 
-It originally only cared about the Phillies, but now it'll look up any team.
+**This project/repo is kind of deprecated.** I'm working to combine the API and Bot into a single repo for easier management.
 
 ## Code Sucks Disclaimer
 **See the to-do's section for a list of known-egrigious things I need to fix someday**
